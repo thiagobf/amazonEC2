@@ -1,0 +1,44 @@
+#!/bin/sh
+
+checkVariables()
+{
+  echo "Checking input arguments"
+  if [ -z "$awsinstance" ];
+  then
+        echo "AWS Instance DNS is NULL" 
+        echo 1
+  fi
+  echo "AWS DNS Instance $awsinstance"
+  echo 0
+}
+
+CheckUsage()
+{
+  echo "Usage for startCLI"
+  echo "./startCLI <AWS DNS Instance>" 
+  echo "AWS DNS Instance: The instance running on AWS, e.g: ec2-3-14-129-11.us-east-2.compute.amazonaws.com"
+}
+
+connectInstance()
+{
+
+#  sshuser=`whoami`
+  sshuser="ec2-user"
+  ssh -i "ec-thiago-teste.pem"  $sshuser@$awsinstance
+  echo 0
+}
+
+unset awsinstance
+
+awsinstance=$1
+echo "Starting the AWS CLI custom $awsinstance" 
+
+checkVariables
+res=$?
+if [ $res -eq "1" ]; then
+ CheckUsage
+ exit 
+fi
+
+connectInstance
+
