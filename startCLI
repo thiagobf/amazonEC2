@@ -1,4 +1,14 @@
 #!/bin/sh
+banner()
+{
+  echo "+------------------------------------------+"
+  printf "| %-40s |\n" "`date`"
+  printf "| %-40s |\n" "`echo $awsinstace`"
+  echo "|                                          |"
+  printf "|`tput bold` %-40s `tput sgr0`|\n" "$@"
+  echo "+------------------------------------------+"
+}
+
 
 checkVariables()
 {
@@ -6,10 +16,8 @@ checkVariables()
   if [ -z "$awsinstance" ];
   then
         echo "AWS Instance DNS is NULL" 
-        echo 1
+        freturn=1
   fi
-  echo "AWS DNS Instance $awsinstance"
-  echo 0
 }
 
 CheckUsage()
@@ -29,13 +37,12 @@ connectInstance()
 }
 
 unset awsinstance
-
+freturn=0
 awsinstance=$1
 echo "Starting the AWS CLI custom $awsinstance" 
-
+banner
 checkVariables
-res=$?
-if [ $res -eq "1" ]; then
+if [ $freturn -eq "1" ]; then
  CheckUsage
  exit 
 fi
